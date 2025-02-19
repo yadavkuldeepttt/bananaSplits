@@ -1,118 +1,84 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+// import React, { useEffect, useRef, useState } from 'react';
+// import ErrorBoundary from 'react-native-error-boundary';
+// import ErrorFallbackComponent from './src/components/error-fallback.component';
+// import { PaperProvider, Text } from 'react-native-paper';
+// import { customTheme } from './src/components/theme';
+// import { View } from 'react-native';
+// const App = () => {
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+//   return (
+//     <ErrorBoundary FallbackComponent={ErrorFallbackComponent}>
+//       <PaperProvider theme={customTheme}>
+//     <View><Text>dfdfsdfdf</Text></View>
+//       </PaperProvider>
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+//     </ErrorBoundary>
+//   );
+// }
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+// App.js with minimal navigation setup
+import React, { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
+import { auth } from './src/screens/config';
+import HomeScreen from './src/screens/home-screen';
+import SignupScreen from './src/screens/signup-screen';
+import LoginScreen from './src/screens/login-screen';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+
+const Stack = createStackNavigator();
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#F9C74F', // Banana yellow
+    accent: '#277DA1', // Teal accent
+    background: '#F9F7F7',
+    text: '#1D1E2C',
+    surface: '#FFFFFF',
+  },
+};
+
+const App = () => {
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState(null);
+
+  // useEffect(() => {
+  //   const subscriber = auth().onAuthStateChanged((user) => {
+  //     setUser(user);
+  //     if (initializing) setInitializing(false);
+  //   });
+    
+  //   return subscriber;
+  // }, [initializing]);
+
+  // if (initializing) return null;
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+    <PaperProvider theme={theme}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {!user ? (
+            <> 
+              <Stack.Screen name="Login" component={LoginScreen} />
+             <Stack.Screen name="Signup" component={SignupScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} />
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+             </>
+          ) : (
+            null
+          )}
+
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
+  );
+};
 
 export default App;
+
+
