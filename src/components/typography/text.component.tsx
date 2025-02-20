@@ -14,7 +14,7 @@ type TTextProps<T> = PropsWithChildren & {
 };
 
 export const TextCmp = (props: TTextProps<string>) => {
-  const fontColor = useAppThemeColor(props.color ?? 'textDark');
+  const fontColor = useAppThemeColor(props?.color ?? 'neutralDark');
 
   return (
     <Text

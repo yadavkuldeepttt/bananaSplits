@@ -1,4 +1,6 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
+import { ScrollView } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import {
   Provider as PaperProvider,
@@ -57,10 +59,11 @@ const theme = {
 
 const WelcomeBookScreen = () => {
   const theme = useTheme();
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
-    
+      <ScrollView>
       <View style={styles.content}>
         <Text variant="displaySmall" style={styles.welcomeText}>
           Welcome To Melon
@@ -86,7 +89,7 @@ const WelcomeBookScreen = () => {
             </Surface>
           </TouchableRipple>
 
-          <TouchableRipple onPress={() => {}} style={styles.cardWrapper}>
+          <TouchableRipple onPress={() => navigation.navigate('DashboarBananaSplit')} style={styles.cardWrapper}>
             <Surface style={styles.card} elevation={1}>
               <Text variant="titleLarge" style={styles.cardTitle}>
                 Do It Myself
@@ -98,6 +101,7 @@ const WelcomeBookScreen = () => {
           </TouchableRipple>
         </View>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

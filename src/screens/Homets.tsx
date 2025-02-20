@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View, ScrollView, Image } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -67,6 +68,8 @@ const FeatureCard = ({ icon, title, description }) => (
 );
 
 const MelonLanding = () => {
+    const navigation = useNavigation();
+  
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -85,7 +88,7 @@ const MelonLanding = () => {
             mode="contained"
             style={styles.getStartedButton}
             contentStyle={styles.buttonContent}
-            onPress={() => { }}
+            onPress={() => navigation.navigate('Login')}
           >
             Get Started →
           </Button>

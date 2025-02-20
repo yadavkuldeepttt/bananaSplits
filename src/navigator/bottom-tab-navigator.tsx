@@ -11,6 +11,8 @@ import SignupScreen from '../screens/signup-screen';
 import WelcomeScreen from '../screens/welcome-screen';
 import WelcomeBookScreen from '../screens/welcome-book-screen';
 import { TextCmp } from '../components/typography/text.component';
+import DashboardBananaSplit from '../screens/dashboard-banana-split';
+import SuccessScreen from '../components/success-screen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator(); // Create a Stack navigator
@@ -36,6 +38,24 @@ const LoginStack = () => (
     <Stack.Screen
       name="WelcomeBook"
       component={WelcomeBookScreen}
+      options={{
+        headerShown: true, title: "Banana splits", headerStyle: {
+          backgroundColor: '#ffffac',
+        },
+      }}
+    />
+    <Stack.Screen
+      name="DashboarBananaSplit"
+      component={DashboardBananaSplit}
+      options={{
+        headerShown: true, title: "Banana splits", headerStyle: {
+          backgroundColor: '#ffffac',
+        },
+      }}
+    />
+     <Stack.Screen
+      name="Success"
+      component={SuccessScreen}
       options={{
         headerShown: true, title: "Banana splits", headerStyle: {
           backgroundColor: '#ffffac',

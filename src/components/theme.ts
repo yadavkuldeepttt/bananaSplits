@@ -1,14 +1,14 @@
 // https://github.com/jsamr/react-native-font-demo#ios
 // See above demo to add fonts for IOS
 
-import {MD3LightTheme as DefaultTheme, MD3Theme} from 'react-native-paper';
-import {MD3Colors} from 'react-native-paper/lib/typescript/types';
+import { MD3LightTheme as DefaultTheme, MD3Theme } from 'react-native-paper';
+import { MD3Colors } from 'react-native-paper/lib/typescript/types';
 
 export type TCustomColorKey = keyof TCustomTheme['colors'];
 
 export type TCustomElevation = {
   shadowColor: string;
-  shadowOffset: {width: number; height: number};
+  shadowOffset: { width: number; height: number };
   shadowOpacity: number;
   shadowRadius: number;
   elevation: number;
@@ -16,9 +16,22 @@ export type TCustomElevation = {
 
 export type TCustomTheme = MD3Theme & {
   colors: MD3Colors & {
+    primary: string;
+    secondary: string;
+    neutralDark: string;
+    surface: string;
+    accentRed: string;
+    natralWhite: string;
+    cardSurface: string;
+
+
     transparent: string;
-    magnolia:string;
-    lightMangolia:string;
+    primaryBlue: string;
+    placeholderGrey: string;
+    lightGrey: string;
+    lightGreen: string;
+    textGreen: string;
+    textBlack: string;
     blueSurface: string;
     onBlueSurface: string;
     handleGray: string;
@@ -26,22 +39,17 @@ export type TCustomTheme = MD3Theme & {
     blue: string;
     orange: string;
     yellow: string;
-    lightpastelOrange: string;
     pastelOrange: string;
     pastelGreen: string;
-    lightpastelGreen: string;
     pastelBlue: string;
-    textDark: string;
+    redText: string;
     textMedium: string;
     textLight: string;
     textInverseDark: string;
     textInverseMedium: string;
     textInverseLight: string;
 
-    neutralLight: string;
-    neutralDark: string;
-    lightGrey: string;
-    linkingColor:string;
+
   };
   spacing: (val: number) => number;
   elevation: {
@@ -115,7 +123,7 @@ export const customTheme: TCustomTheme = {
     },
     titleMedium: {
       fontFamily: 'Poppins',
-      fontSize: 16,
+      fontSize: 20,
       letterSpacing: 0.15,
       lineHeight: 24,
       fontWeight: '400',
@@ -172,52 +180,52 @@ export const customTheme: TCustomTheme = {
   },
   colors: {
     ...DefaultTheme.colors,
+    primary: "rgba(232, 255, 176, 1)",
+    secondary: 'rgba(214, 255, 156, 1)',
+    neutralDark: 'rgba(0, 0, 0, 1)',
     surface: 'rgb(248, 251, 254)',
+    accentRed: "rgba(255, 77, 77, 1)",
+    natralWhite: 'rgba(255, 255, 255, 1)',
+    cardSurface: "rgba(255, 255, 171, 1)",
 
+
+    primaryBlue: 'rgba(29, 113, 184, 1)',
+    placeholderGrey: 'rgba(110, 110, 110, 100)',
+    lightGrey: 'rgba(105, 105, 105, 100)',
+    lightGreen: 'rgba(24, 166, 97, 100)',
+    textGreen: 'rgba(0, 149, 56, 100)',
+    textBlack: 'rgba(36, 42, 55, 100)',
     transparent: 'rgba(0,0,0,0)',
-    magnolia:"rgba(247, 233, 255, 1)",
-    lightMangolia:'rgba(247, 233, 255, 0.3)',
     blueSurface: 'rgb(64, 72, 128)',
     onBlueSurface: 'rgb(255, 255, 255)',
-
-    handleGray: 'rgb(135, 137, 137)',
-
+    handleGray: 'rgba(188, 188, 188, 1)',
     green: 'rgb(57, 210, 126)',
     blue: 'rgb(55, 159, 206)',
     orange: 'rgb(241, 178, 62)',
-    yellow:'rgba(255, 183, 51, 1)',
-
+    yellow: 'rgba(255, 183, 51, 1)',
     pastelBlue: 'rgb(226, 246, 255)',
     pastelGreen: 'rgb(227, 247, 236)',
-    lightpastelOrange: ' rgba(255, 243, 221, 0.4)',
     pastelOrange: 'rgb(255, 243, 221)',
-    lightpastelGreen:'rgba(227, 247, 236, 0.4)',
-    textDark: 'rgb(28, 27, 31)',
     textMedium: 'rgb(66, 66, 66)',
     textLight: 'rgb(99, 99, 99)',
-
     textInverseDark: 'rgb(255, 255, 255)',
     textInverseMedium: 'rgb(255, 255, 255)',
     textInverseLight: 'rgb(255, 255, 255)',
-
-    neutralDark: 'rgb(0, 0, 0)',
-    neutralLight: 'rgb(255, 255, 255)',
-    lightGrey:"rgba(36, 36, 36, 0.2)",
-    linkingColor:'rgba(0, 14, 109, 1)',
+    redText: 'rgba(255, 24, 24, 1)',
   },
   spacing: val => val * 8,
   elevation: {
     none: null,
     low: {
       shadowColor: 'rgba(0, 0, 0, 1)',
-      shadowOffset: {width: 1, height: 1},
+      shadowOffset: { width: 1, height: 1 },
       shadowOpacity: 0.25,
       shadowRadius: 3,
       elevation: 2,
     },
     high: {
       shadowColor: 'rgba(0, 0, 0, 0.75)',
-      shadowOffset: {width: -2, height: 4},
+      shadowOffset: { width: -2, height: 4 },
       shadowOpacity: 0.2,
       shadowRadius: 3,
       elevation: 10,

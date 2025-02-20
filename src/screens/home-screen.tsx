@@ -285,11 +285,13 @@
 
 
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, Surface, useTheme, Card, Appbar, Title, Paragraph, Button } from 'react-native-paper';
+import React, { act, useState } from 'react';
+import { ScrollView, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Text, Surface, useTheme, Card, Appbar, Title, Paragraph, Button, TextInput } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MelonLanding from './Homets';
+import FastImage from 'react-native-fast-image';
+import PaymentDashboard from './dashboard';
 
 // ... Previous components remain the same ...
 
@@ -306,8 +308,7 @@ const FeatureItem = ({ icon, title, description }) => (
   <View style={styles.featureItem}>
     <Icon name={icon} size={24} color="#FF4B4B" style={styles.featureIcon} />
     <View style={styles.featureTextContainer}>
-      <Text style={styles.featureTitle}>{title}</Text>
-      <Text style={styles.featureDescription}>{description}</Text>
+      <Text style={styles.featureTitle}>{title}: <Text style={styles.featureDescription}>{description}</Text></Text>
     </View>
   </View>
 );
@@ -335,7 +336,7 @@ const FeatureItem = ({ icon, title, description }) => (
 //   </Card>
 // );
 
-const BenefitCard = ({ icon, title,iconColor }) => (
+const BenefitCard = ({ icon, title, iconColor }) => (
   <Card style={styles.benefitCard}>
     <Card.Content style={styles.benefitContent}>
       <Icon name={icon} size={32} color={iconColor} style={styles.benefitIcon} />
@@ -364,21 +365,22 @@ const HomeScreen = () => {
   };
   return (
     <ScrollView style={styles.container}>
-       <MelonLanding/>
-             {/* <Appbar.Header style={{ backgroundColor: customTheme.colors.primary }}>
+           <Appbar.Header style={{ backgroundColor: customTheme.colors.primary }}>
          <Appbar.Content title="Banana Split" color={customTheme.colors.text} />
          <Appbar.Action icon="bell" color={customTheme.colors.text} onPress={() => {}} />
          <Appbar.Action icon="dots-vertical" color={customTheme.colors.text} onPress={() => {}} />
-       </Appbar.Header> */}
+       </Appbar.Header>
+      <MelonLanding />
+ 
 
-      
-         {/* Logo and Header */}
-         {/* <View style={styles.header}>
+
+      {/* Logo and Header */}
+      {/* <View style={styles.header}>
            <Text style={styles.tagline}>Get paid on time, every time. Hassle-free.</Text>
          </View> */}
 
-         {/* Main CTA */}
-         {/* <Card style={styles.mainCard}>
+      {/* Main CTA */}
+      {/* <Card style={styles.mainCard}>
            <Card.Content>
              <Title style={styles.mainTitle}>Stop Chasing Payments</Title>
              <Paragraph style={styles.subtitle}>
@@ -406,7 +408,7 @@ const HomeScreen = () => {
           Launch Dashboard
         </Button> */}
 
-        {/* 
+      {/* 
         <Title style={styles.sectionTitle}>Key Features</Title>
         <Card style={styles.featureCard}>
           <Card.Content>
@@ -420,7 +422,7 @@ const HomeScreen = () => {
           </Card.Content>
         </Card> */}
 
-        {/* <Card style={styles.featureCard}>
+      {/* <Card style={styles.featureCard}>
           <Card.Content>
             <View style={styles.featureContent}>
               <Icon name="timer-outline" size={32} color={customTheme.colors.accent} />
@@ -432,7 +434,7 @@ const HomeScreen = () => {
           </Card.Content>
         </Card> */}
 
-        {/* <Card style={styles.featureCard}>
+      {/* <Card style={styles.featureCard}>
           <Card.Content>
             <View style={styles.featureContent}>
               <Icon name="chart-bar" size={32} color={customTheme.colors.accent} />
@@ -444,10 +446,10 @@ const HomeScreen = () => {
           </Card.Content>
         </Card> */}
 
-        {/* Launch Dashboard Button */}
+      {/* Launch Dashboard Button */}
 
-        {/* Video Preview */}
-        {/* <Card style={styles.videoCard}>
+      {/* Video Preview */}
+      {/* <Card style={styles.videoCard}>
           <TouchableOpacity style={styles.playButton}>
             <Icon name="play" size={36} color="#fff" />
           </TouchableOpacity>
@@ -595,55 +597,190 @@ const HomeScreen = () => {
             isActive={activeTab === 'creators'}
             onPress={() => setActiveTab('creators')}
           />
+
+        </View>
+        <View style={styles.tabsContainer}>
           <TabButton
             label="for third party services"
             isActive={activeTab === 'services'}
             onPress={() => setActiveTab('services')}
           />
         </View>
-
         <Card style={styles.featuresCard}>
-          <Card.Content>
-            <FeatureItem
-              icon="cash-check"
-              title="Seamless Payouts"
-              description="Enjoy timely payments, every time. Melon ensures you get what you deserve without delays."
-            />
-            <FeatureItem
-              icon="chart-bar"
-              title="Transparent Insights"
-              description="Our detailed weekly reports keep you informed about your earnings, highlighting every source and split. No more guess work - just clarity."
-            />
-            <FeatureItem
-              icon="shield-check"
-              title="Split Monitoring"
-              description="Melon's dedicated team oversees all financial aspects, employing both technology and human checks to maintain a healthy payout system."
-            />
-            <FeatureItem
-              icon="eye-check"
-              title="Eyes in the sky"
-              description="Melon's software and Split Support team proactively alert you if anything goes wrong with a split so you can relax knowing you're covered."
-            />
-            <FeatureItem
-              icon="lifebuoy"
-              title="Best-in-class support"
-              description="Our extensive knowledge baseand support team are your go-to resources for extracting the maximum value from Melon. Unlock the full potential of your earnings with confidence."
-            />
-          </Card.Content>
+          {activeTab === "agencies"
+            && (<Card.Content>
+              <FeatureItem
+                icon="cash-check"
+                title="Seamless Payouts"
+                description="Enjoy timely payments, every time. Melon ensures you get what you deserve without delays."
+              />
+              <FeatureItem
+                icon="chart-bar"
+                title="Transparent Insights"
+                description="Our detailed weekly reports keep you informed about your earnings, highlighting every source and split. No more guess work - just clarity."
+              />
+              <FeatureItem
+                icon="shield-check"
+                title="Split Monitoring"
+                description="Melon's dedicated team oversees all financial aspects, employing both technology and human checks to maintain a healthy payout system."
+              />
+              <FeatureItem
+                icon="eye-check"
+                title="Eyes in the sky"
+                description="Melon's software and Split Support team proactively alert you if anything goes wrong with a split so you can relax knowing you're covered."
+              />
+              <FeatureItem
+                icon="lifebuoy"
+                title="Best-in-class support"
+                description="Our extensive knowledge baseand support team are your go-to resources for extracting the maximum value from Melon. Unlock the full potential of your earnings with confidence."
+              />
+            </Card.Content>)}
+
+          {activeTab === "creators" &&
+            (<Card.Content>
+              <FeatureItem
+                icon="cash-check"
+                title="Transparent Payments"
+                description="The Melon dashboard detailsevery cash-out and payment to your team so you cansee exactly how much you’ve made and paid in one place."
+              />
+              <FeatureItem
+                icon="chart-bar"
+                title="Secure af"
+                description="No weird bank accounts, payment processors,or third-parties. Just connect your current bank to Melon the same way you do with Venmo and you’re off to the races."
+              />
+              <FeatureItem
+                icon="shield-check"
+                title="Stupid Simple"
+                description="it takes 3 minutes to set accept a splitinvite from your agency team. Log in anytime to view yourpayment history or export your data."
+              />
+              <FeatureItem
+                icon="eye-check"
+                title="Responsive support"
+                description="Reach out to the Melon support teamvia Chat or email with any questions or concerns."
+              />
+
+            </Card.Content>
+            )}
+
+          {activeTab === "services" &&
+            (<Card.Content>
+              <FeatureItem
+                icon="cash-check"
+                title="Efficient Transactions"
+                description="Melon ensures swift and accuratetransactions, making your payouts from agencies and creators hassle-free."
+              />
+              <FeatureItem
+                icon="chart-bar"
+                title="Automated Reports"
+                description="Stay informed with automated weeklyreports. Melon simplifies accounting, providing a comprehensive breakdown of the transactions related to your services."
+              />
+              <FeatureItem
+                icon="shield-check"
+                title="Eliminate Admin Headaches"
+                description="Say goodbye to the tedious task of managing invoices individually. Melon’s referral split system ensures a fair and efficient payout process for all involved parties."
+              />
+              <FeatureItem
+                icon="eye-check"
+                title="Support and Guidance"
+                description="Whether you’re a seasoned serviceprovider or just starting, Melon’s knowledge base and support team are invaluable resources. Get the assistance you need to optimize your experience with Melon."
+              />
+
+            </Card.Content>)}
         </Card>
 
         {/* Preview Image */}
         <Card style={styles.previewCard}>
           <Card.Content>
-            <Text style={styles.previewTitle}>Hey Crafty Paperback!</Text>
-            <Text style={styles.previewSubtitle}>Here's the latest.</Text>
-            {/* Add more preview content here */}
+            <FastImage
+              style={styles.fastImage}
+              source={{
+                uri: 'https://cdn.prod.website-files.com/654d2fd645b814b257a49547/65bbfa9048e8f1bb5a949d36_For-creators(might%20need%20better%20screenshots%20%40CB)%20.gif',
+                priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+            />
           </Card.Content>
         </Card>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Melon in Action</Text>
+          <Text style={{ color: "#fff" }}>Take a look under the hood. You'll like what you see.</Text>
+        </View>
+        <View style={styles.pinkSection}>
+          <Text style={styles.title}>Full Transparency</Text>
+          <Text>See a full history of each platform's cash-out and agency payout so everyone's on the same page</Text>
+          <Button mode="contained" style={styles.button} labelStyle={styles.buttonLabel} onPress={() => { }}>
+            Get Started
+          </Button>
+        </View>
       </View>
 
+
+      {/* Transparency Section */}
+      <PaymentDashboard/>
+
+      {/* Pricing Section */}
+      <View style={styles.section}>
+        <Text style={styles.title}>Our Pricing</Text>
+        <Text>Melon's fees start at $50k of your agency's monthly revenue and gets a volume-based discount</Text>
+
+        <Card style={styles.pricingCard}>
+          <Card.Content>
+            <Text style={styles.pricingText}>$50k</Text>
+            <Text style={styles.percentageText}>4.85%</Text>
+            <Text>per agency payout</Text>
+          </Card.Content>
+        </Card>
+
+        <Card style={styles.pricingCard}>
+          <Card.Content>
+            <Text style={styles.pricingText}>$100k</Text>
+            <Text style={styles.percentageText}>4.6%</Text>
+            <Text>per agency payout</Text>
+          </Card.Content>
+        </Card>
+
+        <Card style={styles.pricingCard}>
+          <Card.Content>
+            <Text style={styles.pricingText}>$500k</Text>
+            <Text>contact sales</Text>
+          </Card.Content>
+        </Card>
+
+        <Button mode="contained" style={styles.button} labelStyle={styles.buttonLabel} onPress={() => { }}>
+          Get Started
+        </Button>
+      </View>
+
+      {/* Affiliate Section */}
+      <View style={styles.pinkSection}>
+        <Text style={styles.title}>Become a Melon Affiliate & get paid</Text>
+        <Text>Introduce an agency to Melon and get paid 10% of our revenue from that account for 12 months!</Text>
+        <Button mode="contained" style={styles.button} labelStyle={styles.buttonLabel} onPress={() => { }}>
+          Learn More
+        </Button>
+      </View>
+
+      {/* Contact Form */}
+      <View style={styles.section}>
+        <TextInput style={styles.input} label="Agency name" mode="outlined" />
+        <TextInput style={styles.input} label="Email address" mode="outlined" keyboardType="email-address" />
+        <TextInput style={styles.input} label="Type your message" mode="outlined" multiline numberOfLines={4} />
+        <Button mode="contained" style={styles.button} labelStyle={styles.buttonLabel} onPress={() => { }}>
+          Submit
+        </Button>
+      </View>
+
+      {/* Footer */}
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>melon</Text>
+        <View style={{ flexDirection: "row", gap: 20 }}>
+          <Text style={styles.footerText}>Terms of Service</Text>
+          <Text style={styles.footerText}>Privacy Policy</Text>
+          <Text style={styles.footerText}>Help Center</Text>
+        </View>
+      </View>
       {/* Rest of the content ... */}
-     
+
     </ScrollView >
   );
 };
@@ -651,9 +788,9 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fffce1',
+    backgroundColor: '#000000',
   },
-  
+
   scrollView: {
     flex: 1,
     backgroundColor: '#fffce1',
@@ -752,7 +889,7 @@ const styles = StyleSheet.create({
   },
 
 
-  
+
 
   title: {
     color: '#1D1E2C',
@@ -882,14 +1019,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#1D1E2C',
     marginBottom: 16,
-    textAlign:"center"
+    textAlign: "center"
   },
   tldrDescription: {
     fontSize: 20,
     color: '#666',
     fontStyle: 'italic',
     marginBottom: 32,
-    textAlign:"center"
+    textAlign: "center"
   },
   benefitsGrid: {
     flexDirection: 'row',
@@ -936,14 +1073,18 @@ const styles = StyleSheet.create({
   tabsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 24,
+    marginBottom: 10,
     gap: 8,
+    width: "90%",
+    alignItems: "center",
+    alignSelf: "center"
   },
   tabButton: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 30,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 10,
     backgroundColor: '#FFC0CB',
+    alignItems: "center"
   },
   activeTabButton: {
     backgroundColor: '#98FB98',
@@ -959,24 +1100,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
     marginBottom: 24,
+    paddingTop: 10
   },
   featureItem: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     marginBottom: 20,
   },
   featureIcon: {
     marginRight: 16,
     marginTop: 2,
-  },
-  featureTextContainer: {
-    flex: 1,
-  },
-  featureTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000000',
-    marginBottom: 4,
   },
   featureDescription: {
     fontSize: 14,
@@ -984,7 +1117,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   previewCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#f1f1f1',
     borderRadius: 12,
   },
   previewTitle: {
@@ -996,6 +1129,71 @@ const styles = StyleSheet.create({
   previewSubtitle: {
     fontSize: 16,
     color: '#666666',
+  },
+  fastImage: {
+    width: "100%",
+    height: 180,
+    alignSelf: "center",
+  },
+
+
+
+
+  headerText: {
+    color: "#fff",
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  section: {
+    padding: 20,
+  },
+  pinkSection: {
+    backgroundColor: "#FFE4E1",
+    padding: 20,
+    alignSelf: "center",
+    borderRadius:30
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  pricingCard: {
+    marginVertical: 10,
+    padding: 16,
+    backgroundColor: "#FFE4E1",
+    borderRadius: 12,
+  },
+  pricingText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  percentageText: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginVertical: 8,
+  },
+  button: {
+    marginVertical: 10,
+    backgroundColor: "#FF4500",
+  },
+  buttonLabel: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  footer: {
+    padding: 20,
+    backgroundColor: "#000",
+    alignItems: "center",
+  },
+  footerText: {
+    color: "#fff",
+    marginVertical: 5,
+  },
+  input: {
+    marginVertical: 8,
+    backgroundColor: "#fff",
   },
 });
 

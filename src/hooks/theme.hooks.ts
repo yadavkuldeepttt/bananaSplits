@@ -17,7 +17,7 @@ export const useAppThemeStyles = <T>(
 export const useAppThemeColor = (key: TCustomColorKey): string => {
   const theme = useAppTheme();
 
-  const _color = theme.colors[key];
+  const _color = theme?.colors[key];
   if (typeof _color === 'string') {
     return _color;
   } else {
