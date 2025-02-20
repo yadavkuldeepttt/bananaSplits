@@ -34,7 +34,6 @@ export type TCustomTheme = MD3Theme & {
     textDark: string;
     textMedium: string;
     textLight: string;
-
     textInverseDark: string;
     textInverseMedium: string;
     textInverseLight: string;

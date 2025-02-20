@@ -77,7 +77,7 @@ const LoginScreen = () => {
           <Button
             mode="contained"
             // onPress={handleLogin}
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => navigation.navigate('Welcome')}
             loading={loading}
             style={styles.button}
             labelStyle={styles.buttonLabel}

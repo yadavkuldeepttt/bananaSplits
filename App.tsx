@@ -1,24 +1,3 @@
-// import React, { useEffect, useRef, useState } from 'react';
-// import ErrorBoundary from 'react-native-error-boundary';
-// import ErrorFallbackComponent from './src/components/error-fallback.component';
-// import { PaperProvider, Text } from 'react-native-paper';
-// import { customTheme } from './src/components/theme';
-// import { View } from 'react-native';
-// const App = () => {
-
-//   return (
-//     <ErrorBoundary FallbackComponent={ErrorFallbackComponent}>
-//       <PaperProvider theme={customTheme}>
-//     <View><Text>dfdfsdfdf</Text></View>
-//       </PaperProvider>
-
-//     </ErrorBoundary>
-//   );
-// }
-
-
-
-// App.js with minimal navigation setup
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -27,6 +6,8 @@ import { auth } from './src/screens/config';
 import HomeScreen from './src/screens/home-screen';
 import SignupScreen from './src/screens/signup-screen';
 import LoginScreen from './src/screens/login-screen';
+import BottomTabNavigator from './src/navigator/bottom-tab-navigator';
+
 
 
 const Stack = createStackNavigator();
@@ -35,8 +16,8 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#F9C74F', // Banana yellow
-    accent: '#277DA1', // Teal accent
+    primary: '#F9C74F',
+    accent: '#277DA1',
     background: '#F9F7F7',
     text: '#1D1E2C',
     surface: '#FFFFFF',
@@ -52,7 +33,7 @@ const App = () => {
   //     setUser(user);
   //     if (initializing) setInitializing(false);
   //   });
-    
+
   //   return subscriber;
   // }, [initializing]);
 
@@ -61,17 +42,15 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {!user ? (
-            <> 
-              <Stack.Screen name="Login" component={LoginScreen} />
-             <Stack.Screen name="Signup" component={SignupScreen} />
-            <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Navigator initialRouteName='BottomTab' screenOptions={{ headerShown: false }}>
+          {/* {!user ? (
+            <> */}
+          <Stack.Screen name="BottomTab" component={BottomTabNavigator} />
 
-             </>
+          {/* </>
           ) : (
             null
-          )}
+          )} */}
 
         </Stack.Navigator>
       </NavigationContainer>
