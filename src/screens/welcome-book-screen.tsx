@@ -33,7 +33,7 @@ const theme = {
     lg: 24,
     xl: 32,
   },
-  // Custom typography scale
+
   fonts: {
     ...MD3LightTheme.fonts,
     superLarge: {
@@ -66,9 +66,9 @@ const WelcomeBookScreen = () => {
       <ScrollView>
       <View style={styles.content}>
         <Text variant="displaySmall" style={styles.welcomeText}>
-          Welcome To Melon
+          Welcome To Banana Split
         </Text>
-        <Text style={styles.watermelonEmoji}>🍉</Text>
+        {/* <Text style={styles.watermelonEmoji}>🍉</Text> */}
         <Text variant="headlineMedium" style={styles.startedText}>
           Lets Get You Started
         </Text>
@@ -122,8 +122,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     textAlign: 'center',
     marginTop: theme.spacing.xl,
-    fontFamily: theme.fonts.superLarge.fontFamily,
-    ...theme.fonts.superLarge,
+    fontSize:30
   },
   watermelonEmoji: {
     fontSize: 48,

@@ -12,7 +12,16 @@ import WelcomeScreen from '../screens/welcome-screen';
 import WelcomeBookScreen from '../screens/welcome-book-screen';
 import { TextCmp } from '../components/typography/text.component';
 import DashboardBananaSplit from '../screens/dashboard-banana-split';
-import SuccessScreen from '../components/success-screen';
+import SuccessScreen from '../demoscreens/SuccessScreen';
+import PaymentScreen from '../demoscreens/PaymentScreen';
+// import CreateSplitForm from '../demoscreens/createSplitform';
+import CreateSplitModal from '../screens/create-split-modal';
+import CreateSplitForm from '../screens/create-splits';
+// import DashboardBananaSplit from '../demoscreens/DashboradBanansplit';
+// import SuccessScreen from '../components/success-screen';
+// import CreateSplitModal from '../screens/create-split-modal';
+// import CreateSplitForm from '../screens/create-splits';
+// import PaymentScreen from '../screens/payment-screen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator(); // Create a Stack navigator
@@ -28,7 +37,11 @@ const LoginStack = () => (
     <Stack.Screen
       name="Welcome"
       component={WelcomeScreen}
-      options={{ headerShown: false }}
+      options={{
+        headerShown: true, title: "Banana Split", headerStyle: {
+          backgroundColor: '#ffffac',
+        },
+      }}
     />
     <Stack.Screen
       name="Signup"
@@ -39,7 +52,7 @@ const LoginStack = () => (
       name="WelcomeBook"
       component={WelcomeBookScreen}
       options={{
-        headerShown: true, title: "Banana splits", headerStyle: {
+        headerShown: true, title: "Banana Split", headerStyle: {
           backgroundColor: '#ffffac',
         },
       }}
@@ -48,22 +61,35 @@ const LoginStack = () => (
       name="DashboarBananaSplit"
       component={DashboardBananaSplit}
       options={{
-        headerShown: true, title: "Banana splits", headerStyle: {
+        headerShown: true, title: "Banana Split", headerStyle: {
           backgroundColor: '#ffffac',
         },
       }}
     />
-     <Stack.Screen
+    <Stack.Screen
       name="Success"
       component={SuccessScreen}
       options={{
-        headerShown: true, title: "Banana splits", headerStyle: {
+        headerShown: true, title: "Banana Split", headerStyle: {
           backgroundColor: '#ffffac',
         },
       }}
     />
   </Stack.Navigator>
 );
+
+const DashStack = createStackNavigator();
+
+const DashBoardStack = () => {
+  return (
+    <DashStack.Navigator initialRouteName="Dashboard" screenOptions={{headerShown:false}}>
+      <DashStack.Screen name="Dashboard" component={DashboardBananaSplit} />
+      <DashStack.Screen name="CreateSplit" component={CreateSplitForm} />
+      <DashStack.Screen name="Payment" component={PaymentScreen} />
+      <DashStack.Screen name="Success" component={SuccessScreen} />
+    </DashStack.Navigator>
+  );
+}
 
 const BottomTabNavigator = () => {
   const theme = useTheme();
@@ -73,7 +99,7 @@ const BottomTabNavigator = () => {
       ...theme.colors,
       primary: '#ffbe00', // yellow from logo
       accent: '#ff3d00',  // orange-red from buttons
-      background: '#ffffab', // light yellow background
+      background: '#ffffab', 
       text: '#1e1e2c',
     },
   };
@@ -117,7 +143,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Payments"
-        component={PaymentsScreen}
+        component={DashBoardStack}
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Icon name="bank-transfer" size={24} color={focused ? customTheme.colors.primary : color} />
@@ -133,6 +159,11 @@ const BottomTabNavigator = () => {
               Dashboard
             </Text>
           ),
+          headerShown: true,
+          title: "Banana Split", headerStyle: {
+            backgroundColor: '#ffffac',
+          },
+
         }}
       />
       <Tab.Screen
@@ -180,17 +211,24 @@ const BottomTabNavigator = () => {
   );
 };
 
-const PaymentsScreen = () => (
-  <View style={styles.screenContainer}>
-    <Text>Payments Screen</Text>
-  </View>
-);
+const PaymentsScreen = () => {
+  const [visible, setVisible] = React.useState(true);
+  return (
+    <View style={styles.screenContainer}>
+      {/* <CreateSplitModal
+      visible={visible}
+      onDismiss={() => setVisible(false)}
+      onContinue={(type) => {
+        console.log('Selected type:', type);
+        setVisible(false);
+      }}
+    /> */}
+      {/* <CreateSplitForm/> */}
+      <PaymentScreen />
+    </View>
+  );
+}
 
-const ProfileScreen = () => (
-  <View style={styles.screenContainer}>
-    <Text>Profile Screen</Text>
-  </View>
-);
 
 const styles = StyleSheet.create({
   screenContainer: {

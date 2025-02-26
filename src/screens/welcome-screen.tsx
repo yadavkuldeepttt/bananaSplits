@@ -27,14 +27,14 @@ const WelcomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Logo Section */}
-      <Surface style={styles.headerSection} elevation={0}>
+      {/* <Surface style={styles.headerSection} elevation={0}>
         <Text style={styles.logoText}>melon</Text>
         <Text style={styles.logoEmoji}>🍉</Text>
-      </Surface>
+      </Surface> */}
 
       {/* Welcome Text */}
       <View style={styles.welcomeSection}>
-        <Text style={styles.welcomeTitle}>Welcome To Melon 🍉</Text>
+        <Text style={styles.welcomeTitle}>Welcome To Banana Split</Text>
         <Text style={styles.welcomeSubtitle}>Lets Get You Started</Text>
         <Text style={styles.optionsText}>Would you rather...</Text>
       </View>
@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFFFFF',
     marginBottom: 10,
+    textAlign: "center"
   },
   welcomeSubtitle: {
     fontSize: 24,
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '45%',
-    backgroundColor: '#FFFFE0',
+    backgroundColor: '#ffffac',
     borderRadius: 8,
     minHeight: 120,
   },

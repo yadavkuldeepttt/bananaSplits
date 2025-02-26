@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View, Linking, TouchableOpacity, Platform, Button } from 'react-native';
-import { Provider as PaperProvider, Text, Portal, Surface, useTheme, DefaultTheme } from 'react-native-paper';
+import { StyleSheet, View, Linking, TouchableOpacity, Platform } from 'react-native';
+import { Provider as PaperProvider, Text, Portal, Surface, useTheme, DefaultTheme, Button } from 'react-native-paper';
 import { create, open, dismissLink, LinkSuccess, LinkExit, LinkIOSPresentationStyle, LinkLogLevel } from 'react-native-plaid-link-sdk';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,11 +13,12 @@ const theme = {
         primary: '#98FB98', // Light green color for button
         warning: '#FFF3CD', // Light yellow for warning box
         warningText: '#856404',
+        accent: '#FF4D4D',
     },
 };
 
 const WarningBox = ({ children }) => {
-    const theme = useTheme();
+
     return (
         <Surface style={[styles.warningBox, { backgroundColor: theme.colors.warning }]}>
             <Text style={[styles.warningText, { color: theme.colors.warningText }]}>{children}</Text>
@@ -26,92 +27,75 @@ const WarningBox = ({ children }) => {
 };
 
 
-const DashboardBananaSplit = () => {
-    const [linkToken, setLinkToken] = useState(null);
-    const address = Platform.OS === 'ios' ? 'localhost' : '10.0.2.2';
-    const navigation = useNavigation();
-    // const onPlaidSuccess = useCallback((success: LinkSuccess) => {
-    //     console.log('Plaid Link Success:', success);
-    //     // Handle successful bank linking here
-    // }, []);
-
-    // const onPlaidExit = useCallback(() => {
-    //     console.log('Plaid Link Exit');
-    //     // Handle exit
-    // }, []);
-
-    // <PlaidLink
-    //     tokenConfig={{
-    //         token: '#GENERATED_LINK_TOKEN#',
-    //     }}
-    //     onSuccess={(success: LinkSuccess) => {
-    //         console.log(success);
-    //     }}
-    //     onExit={(exit: LinkExit) => {
-    //         console.log(exit);
-    //     }}
-    // >
-    //     <Text>Add Account</Text>
-    // </PlaidLink>
-    const createLinkToken = useCallback(async () => {
-        await fetch(`http://localhost:3011/create-link-token`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            // body: JSON.stringify({ public_token: 'localhost'})
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setLinkToken(data.link_token);
-            })
-            .catch((err) => {
-                console.log(JSON.stringify(err));
+    const API_BASE_URL = Platform.select({
+      // android: 'http://localhost:8080/api',       // For iOS simulator
+        android: 'http://192.168.0.196:8080/api',    // For Android emulator
+        ios: 'http://10.0.2.2:8080/api',    // For Android emulator
+        default: 'http://localhost:8080/api',   // Fallback
+      });
+      
+      const DashboardBananaSplit = ({ navigation }: any) => {
+        const [linkToken, setLinkToken] = useState<string | null>(null);
+      
+        const createLinkToken = useCallback(async () => {
+          try {
+            const url = `${API_BASE_URL}/create_link_token`;
+            console.log('Attempting to fetch from:', url);
+            
+            const response = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
             });
-    }, [setLinkToken]);
-
-    useEffect(() => {
-        if (linkToken == null) {
+      
+            console.log('Response status:', response);
+            
+            if (!response.ok) {
+              const text = await response.text();
+              console.error('Server response:', text);
+              throw new Error(`Server error: ${response.status}`);
+            }
+      
+            const data = await response.json();
+            setLinkToken(data.link_token);
+          } catch (err) {
+            console.error('Network error:', err.message);
+            console.error('Full error object:', err);
+          }
+        }, []);
+      
+        // Rest of the component remains the same...
+      
+        useEffect(() => {
+          if (!linkToken) {
             createLinkToken();
-        } else {
-            const tokenConfiguration = createLinkTokenConfiguration(linkToken);
-            create(tokenConfiguration);
-        }
-    }, [linkToken]);
-
-    const createLinkTokenConfiguration = (token: string, noLoadingState: boolean = false) => {
-        return {
-            token: token,
-            noLoadingState: noLoadingState,
-        };
-    };
-    const createLinkOpenProps = () => {
-        return {
+          } else {
+            create({ token: linkToken });
+          }
+        }, [linkToken]);
+      
+        const handleOpenLink = () => {
+          open({
             onSuccess: async (success: LinkSuccess) => {
-                await fetch(`http://localhost:3011/exchange-public-token`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ public_token: success.publicToken }),
-                })
-                    .catch((err) => {
-                        console.log(err);
-                    });
+              try {
+               const response= await fetch(`${API_BASE_URL}/exchange_public_token`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ public_token: success.publicToken }),
+                });
+                console.log("response",response)
                 navigation.navigate('Success', success);
+              } catch (err) {
+                console.error('Error exchanging token:', err);
+              }
             },
             onExit: (linkExit: LinkExit) => {
-                console.log('Exit: ', linkExit);
-                dismissLink();
+              console.log('Exit:', linkExit);
+              dismissLink();
             },
             iOSPresentationStyle: LinkIOSPresentationStyle.MODAL,
-            logLevel: LinkLogLevel.ERROR,
+            logLevel: LinkLogLevel.ERROR
+          });
         };
-    };
-    const handleOpenLink = () => {
-        const openProps = createLinkOpenProps();
-        open(openProps);
-    };
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.content}>
@@ -136,35 +120,26 @@ const DashboardBananaSplit = () => {
                     </Text>
                 </View>
 
-                {/* <PlaidLink
-                    tokenConfig={{
-                        token: 'YOUR_LINK_TOKEN', // Replace with your Plaid link token
-                    }}
-                    onSuccess={onPlaidSuccess}
-                    onExit={onPlaidExit}
-                >
-                    <Button
-                        mode="contained"
-                        icon="plus"
-                        style={styles.linkButton}
-                        labelStyle={styles.linkButtonLabel}
-                    >
-                        Link bank account
-                    </Button>
-                </PlaidLink> */}
-                {/* <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                        create({ token: '' });
-                        setDisabled(false);
-                    }
-                    }>
-                    <Text style={styles.button}>Link bank account</Text>
-                </TouchableOpacity> */}
-                <Button
-                    title="Open Link"
-                    onPress={handleOpenLink}
-                />
+           <Button
+            mode="contained"
+            style={styles.getStartedButton}
+            contentStyle={styles.buttonContent}
+            onPress={handleOpenLink}
+          >
+           Link bank account
+          </Button>
+
+
+                      <Button 
+                        mode="contained" 
+                        onPress={() => navigation.navigate('CreateSplit')}
+                        style={styles.getStartedButton}
+                        contentStyle={styles.buttonContent}
+                      >
+                        Create New Split
+                      </Button>
+
+                 
                 <WarningBox>
                     Please note that we have removed Navy Federal from the list of supported Banks.{' '}
                     <Text
@@ -217,6 +192,136 @@ const styles = StyleSheet.create({
         color: '#007AFF',
         textDecorationLine: 'underline',
     },
+    getStartedButton: {
+      backgroundColor: theme.colors.accent,
+      borderRadius: 24,
+    },
+    dashBoardButton: {
+      backgroundColor: theme.colors.accent,
+      borderRadius: 24,
+      width: "88%",
+      alignSelf: "center"
+    },
+    buttonContent: {
+      height: 48,
+    },
 });
 
 export default DashboardBananaSplit;
+
+
+
+
+
+
+
+// import React, { useState, useEffect, useCallback } from 'react';
+// import { View, Text, StyleSheet, Button, Platform } from 'react-native';
+// import { create, open, dismissLink, LinkSuccess, LinkExit, LinkIOSPresentationStyle, LinkLogLevel } from 'react-native-plaid-link-sdk';
+
+// // Platform-specific API configuration
+// const API_BASE_URL = Platform.select({
+//   ios: 'http://localhost:8080/api',       // For iOS simulator
+//   android: 'http://192.168.0.196:8080/api',    // For Android emulator
+//   default: 'http://localhost:8080/api',   // Fallback
+// });
+
+// const DashboardBananaSplit = ({ navigation }: any) => {
+//   const [linkToken, setLinkToken] = useState<string | null>(null);
+
+//   const createLinkToken = useCallback(async () => {
+//     try {
+//       const url = `${API_BASE_URL}/create_link_token`;
+//       console.log('Attempting to fetch from:', url);
+      
+//       const response = await fetch(url, {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//       });
+
+//       console.log('Response status:', response.status);
+      
+//       if (!response.ok) {
+//         const text = await response.text();
+//         console.error('Server response:', text);
+//         throw new Error(`Server error: ${response.status}`);
+//       }
+
+//       const data = await response.json();
+//       setLinkToken(data.link_token);
+//     } catch (err) {
+//       console.error('Network error:', err.message);
+//       console.error('Full error object:', err);
+//     }
+//   }, []);
+
+//   // Rest of the component remains the same...
+
+//   useEffect(() => {
+//     if (!linkToken) {
+//       createLinkToken();
+//     } else {
+//       create({ token: linkToken });
+//     }
+//   }, [linkToken]);
+
+//   const handleOpenLink = () => {
+//     open({
+//       onSuccess: async (success: LinkSuccess) => {
+//         try {
+//           await fetch(`${API_BASE_URL}/exchange_public_token`, {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({ public_token: success.publicToken }),
+//           });
+//           navigation.navigate('Success', success);
+//         } catch (err) {
+//           console.error('Error exchanging token:', err);
+//         }
+//       },
+//       onExit: (linkExit: LinkExit) => {
+//         console.log('Exit:', linkExit);
+//         dismissLink();
+//       },
+//       iOSPresentationStyle: LinkIOSPresentationStyle.MODAL,
+//       logLevel: LinkLogLevel.ERROR
+//     });
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <View style={styles.header}>
+//         <Text style={styles.title}>Tiny Quickstart – React Native</Text>
+//       </View>
+//       <View style={styles.buttonContainer}>
+//         <Button title="Open Link" onPress={handleOpenLink} />
+//       </View>
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#FFFFFF',
+//   },
+//   header: {
+//     alignItems: 'center',
+//     paddingHorizontal: 32,
+//     paddingBottom: 32,
+//     marginTop: 36,
+//   },
+//   title: {
+//     fontSize: 28,
+//     fontWeight: 'bold',
+//     textAlign: 'center',
+//   },
+//   buttonContainer: {
+//     flex: 1,
+//     justifyContent: 'flex-end',
+//     paddingHorizontal: 32,
+//     paddingBottom: 32,
+//   },
+// });
+
+// export default DashboardBananaSplit;
