@@ -78,7 +78,7 @@ const DashboardBananaSplit = ({ navigation }: any) => {
     if (!linkToken && !isBankLinked) {
       createLinkToken();
     } else {
-      // create({ token: linkToken });
+      create({ token: linkToken });
     }
   }, [linkToken, isBankLinked]);
 

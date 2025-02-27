@@ -1,37 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
-import BottomTabNavigator from './src/navigator/bottom-tab-navigator';
-import { StripeProvider } from '@stripe/stripe-react-native';
-import { AuthProvider } from './src/context/Authcontext';
+// import React, { useState, useEffect } from 'react';
+// import { NavigationContainer } from '@react-navigation/native';
+// import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
+// import BottomTabNavigator from './src/navigator/bottom-tab-navigator';
+// import { StripeProvider } from '@stripe/stripe-react-native';
+// import { AuthProvider } from './src/context/Authcontext';
 
 
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#F9C74F',
-    accent: '#277DA1',
-    background: '#F9F7F7',
-    text: '#1D1E2C',
-    surface: '#FFFFFF',
-  },
-};
+// const theme = {
+//   ...DefaultTheme,
+//   colors: {
+//     ...DefaultTheme.colors,
+//     primary: '#F9C74F',
+//     accent: '#277DA1',
+//     background: '#F9F7F7',
+//     text: '#1D1E2C',
+//     surface: '#FFFFFF',
+//   },
+// };
 
-const App = () => {
+// const App = () => {
 
-  return (
-    <PaperProvider theme={theme}>
-      {/* <AuthProvider> */}
-        <NavigationContainer>
-          <BottomTabNavigator />
-        </NavigationContainer>
-      {/* </AuthProvider> */}
-    </PaperProvider>
-  );
-};
+//   return (
+//     <PaperProvider theme={theme}>
+//       {/* <AuthProvider> */}
+//         <NavigationContainer>
+//           <BottomTabNavigator />
+//         </NavigationContainer>
+//       {/* </AuthProvider> */}
+//     </PaperProvider>
+//   );
+// };
 
-export default App;
+// export default App;
 
 
 // import React, { useEffect } from 'react';
@@ -285,7 +285,7 @@ export default App;
 
 //   useEffect(() => {
 //     requestPermissions();
-    
+
 //     // Start fade-in animation
 //     Animated.parallel([
 //       Animated.timing(fadeAnim, {
@@ -426,7 +426,7 @@ export default App;
 //           <View style={styles.stepsCard}>
 //             <Text style={styles.stepsValue}>{steps.toLocaleString()}</Text>
 //             <Text style={styles.stepsLabel}>steps today</Text>
-            
+
 //             <View style={styles.progressContainer}>
 //               <Animated.View 
 //                 style={[
@@ -438,14 +438,14 @@ export default App;
 //                 ]} 
 //               />
 //             </View>
-            
+
 //             <Text style={styles.goalText}>
 //               {steps < 10000 
 //                 ? `${(10000 - steps).toLocaleString()} steps to reach your daily goal` 
 //                 : 'Daily goal reached! 🎉'}
 //             </Text>
 //           </View>
-          
+
 //           <View style={styles.statsContainer}>
 //             <View style={styles.statCard}>
 //               <Text style={styles.statValue}>{Math.round(steps * 0.0008 * 100) / 100}</Text>
@@ -473,7 +473,7 @@ export default App;
 //           <View style={styles.heartRateCard}>
 //             <Text style={styles.heartRateTitle}>Heart Rate</Text>
 //             <Text style={styles.heartRateSubtitle}>Last 24 Hours</Text>
-            
+
 //             {heartRates.length > 0 ? (
 //               <View style={styles.currentHRContainer}>
 //                 <Text style={styles.currentHRValue}>
@@ -484,7 +484,7 @@ export default App;
 //             ) : (
 //               <Text style={styles.noDataText}>No recent heart rate data</Text>
 //             )}
-            
+
 //             {/* <LineChart
 //               data={getHeartRateChartData()}
 //               width={Dimensions.get('window').width - 60}
@@ -508,7 +508,7 @@ export default App;
 //               bezier
 //               style={styles.chart}
 //             /> */}
-            
+
 //             <View style={styles.hrZonesContainer}>
 //               <Text style={styles.hrZonesTitle}>Heart Rate Zones</Text>
 //               <View style={styles.hrZones}>
@@ -852,3 +852,61 @@ export default App;
 //     fontWeight: '600',
 //   },
 // });
+
+
+import React, { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import SignupScreen from './src/screens/signup-screen';
+import UsersList from './src/screens/UsersList';
+import { PaperProvider } from 'react-native-paper';
+import { themes } from './src/components/color';
+import { Provider } from 'react-redux';
+import store from './src/store/store';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // To manage user session
+
+const Stack = createStackNavigator();
+
+export default function App() {
+  const [isSignedIn, setIsSignedIn] = useState(null); // Set initial state as null
+  const [isLoading, setIsLoading] = useState(true); // Track loading state
+
+  useEffect(() => {
+    // Check if user is authenticated (using AsyncStorage or any other method)
+    const checkAuthentication = async () => {
+      try {
+        const userToken = await AsyncStorage.getItem('userToken'); // Assume 'userToken' is stored on successful login
+        if (userToken) {
+          setIsSignedIn(true); // User is signed in
+        } else {
+          setIsSignedIn(false); // User is not signed in
+        }
+      } catch (error) {
+        console.error('Error checking authentication:', error);
+        setIsSignedIn(false); // Default to not signed in in case of error
+      } finally {
+        setIsLoading(false); // Set loading state to false once check is complete
+      }
+    };
+
+    checkAuthentication();
+  }, []);
+
+  if (isLoading) {
+    // Show loading screen or splash screen while checking authentication
+    return null; // Or you could return a loading spinner or splash screen here
+  }
+
+  return (
+    <PaperProvider theme={themes}>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName={isSignedIn ? 'Users' : 'Login'}>
+            <Stack.Screen name="Login" component={SignupScreen} />
+            <Stack.Screen name="Users" component={UsersList} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    </PaperProvider>
+  );
+}
