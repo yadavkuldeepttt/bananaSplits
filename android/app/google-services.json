@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "610446404679",
+    "project_id": "bananasplits-63f28",
+    "storage_bucket": "bananasplits-63f28.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:610446404679:android:b79490996c8ccba2329562",
+        "android_client_info": {
+          "package_name": "com.bananasplits"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "610446404679-ocf596ro2v772imk75ri5aqslinknl2q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bananasplits",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "610446404679-ehqsev31sj8gfkopjakmm39qcj8jda8v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1OfZ9z09LVA-N18syPVIpBf55cESfZAE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "610446404679-ehqsev31sj8gfkopjakmm39qcj8jda8v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
